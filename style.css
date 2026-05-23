@@ -851,19 +851,66 @@ body {
 
 @media (max-width: 560px) {
   .section {
-    padding: 80px 16px;
+    padding: 60px 16px;
+  }
+
+  .text-layer h1 {
+    font-size: clamp(1.8rem, 10vw, 3rem);
+    padding: 0 16px;
+  }
+
+  .section__title {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+    margin-bottom: 40px;
   }
 
   .section--cta {
-    padding: 100px 16px;
+    padding: 80px 16px;
   }
 
   .info-cards {
     grid-template-columns: 1fr;
   }
 
+  .timeline {
+    padding: 20px 0;
+  }
+
+  .timeline__item {
+    padding-left: 48px;
+    margin-bottom: 40px;
+  }
+
+  .timeline__track {
+    left: 16px;
+  }
+
+  .timeline__dot {
+    left: 16px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .timeline__item .judge-card {
+    padding: 24px;
+  }
+
+  .judge-card__score {
+    font-size: 2.5rem;
+  }
+
+  .judging-total__value {
+    font-size: 3rem;
+  }
+
   .btn-cta {
-    padding: 16px 32px;
+    padding: 16px 24px;
     font-size: 0.7rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  .cta-subtitle {
+    margin-bottom: 40px;
   }
 }
