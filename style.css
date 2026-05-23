@@ -1,0 +1,250 @@
+/* ════════════════════════════════════════════════
+   AI DRIFT — Cinematic Scroll Experience
+   ════════════════════════════════════════════════ */
+
+/* ── Reset ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;          /* we handle smoothing ourselves */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0a;
+  color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ════════════════════════════════════════════════
+   LOADER
+   ════════════════════════════════════════════════ */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.loader-ring {
+  width: 64px;
+  height: 64px;
+  border: 3px solid rgba(255, 255, 255, 0.08);
+  border-top-color: #ff3c3c;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-text {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+}
+
+.loader-percent {
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #ff3c3c, #ff8c3c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ════════════════════════════════════════════════
+   HERO VIEWPORT
+   ════════════════════════════════════════════════ */
+.hero-viewport {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1;
+  background: #0a0a0a;
+}
+
+#hero-canvas {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* sized via JS to achieve object-fit:cover */
+}
+
+/* ── Grain overlay ── */
+.overlay-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  z-index: 5;
+}
+
+/* ── Vignette ── */
+.overlay-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(10, 10, 10, 0.7) 100%);
+  z-index: 4;
+}
+
+/* ════════════════════════════════════════════════
+   SCROLL INDICATOR
+   ════════════════════════════════════════════════ */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.scroll-indicator.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-indicator span {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.scroll-arrow {
+  width: 20px;
+  height: 20px;
+  border-right: 2px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  transform: rotate(45deg);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); }
+  50%      { transform: rotate(45deg) translateY(8px); }
+}
+
+/* ════════════════════════════════════════════════
+   PROGRESS BAR
+   ════════════════════════════════════════════════ */
+.progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  z-index: 10;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff3c3c, #ff8c3c);
+  transition: none;   /* driven by JS */
+}
+
+/* ════════════════════════════════════════════════
+   TEXT LAYERS
+   ════════════════════════════════════════════════ */
+.text-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.text-layer h1 {
+  text-align: center;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  text-shadow:
+    0 0 60px rgba(255, 60, 60, 0.25),
+    0 0 120px rgba(255, 60, 60, 0.1);
+}
+
+/* Responsive type sizing */
+.text-layer h1 {
+  font-size: clamp(2.4rem, 8vw, 7rem);
+}
+
+/* ════════════════════════════════════════════════
+   SCROLL WRAPPER  (provides 400vh scroll depth)
+   ════════════════════════════════════════════════ */
+.scroll-wrapper {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 400vh;
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════
+   SELECTION & SCROLLBAR
+   ════════════════════════════════════════════════ */
+::selection {
+  background: #ff3c3c;
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 60, 60, 0.3);
+  border-radius: 4px;
+}

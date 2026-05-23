@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Drift — A cinematic scroll-driven F1 experience. Built in 6 hours." />
+  <title>AI DRIFT — Scroll Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════ LOADING SCREEN ══════════════ -->
+  <div id="loader" class="loader">
+    <div class="loader-inner">
+      <div class="loader-ring"></div>
+      <p class="loader-text">LOADING FRAMES</p>
+      <p class="loader-percent" id="loader-percent">0 %</p>
+    </div>
+  </div>
+
+  <!-- ══════════════ HERO VIEWPORT (fixed) ══════════════ -->
+  <div class="hero-viewport" id="hero-viewport">
+    <canvas id="hero-canvas"></canvas>
+
+    <!-- Overlay grain / vignette -->
+    <div class="overlay-grain"></div>
+    <div class="overlay-vignette"></div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator" id="scroll-indicator">
+      <span>SCROLL TO EXPLORE</span>
+      <div class="scroll-arrow"></div>
+    </div>
+
+    <!-- ── TEXT LAYERS ── -->
+    <div class="text-layer" id="text-1">
+      <h1>6HRS<br/>HACKATHON</h1>
+    </div>
+
+    <div class="text-layer" id="text-2">
+      <h1>BUILD FAST<br/>AND RAPID</h1>
+    </div>
+
+    <div class="text-layer" id="text-3">
+      <h1>CROSS THE<br/>FINISH LINE</h1>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCROLL WRAPPER (creates scroll depth) ══════════════ -->
+  <div class="scroll-wrapper" id="scroll-wrapper"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
