@@ -7,35 +7,40 @@
   /* ── Config ── */
   const FRAME_COUNT   = 81;
   const FRAME_DIR     = 'frames/';
-  const LERP_FACTOR   = 0.08;        // smoothing speed (lower = smoother)
+  const LERP_FACTOR   = 0.08;
   const DEBOUNCE_MS   = 150;
 
   /* ── DOM refs ── */
-  const canvas        = document.getElementById('hero-canvas');
-  const ctx           = canvas.getContext('2d');
-  const loader        = document.getElementById('loader');
-  const loaderPercent = document.getElementById('loader-percent');
-  const progressFill  = document.getElementById('progress-fill');
+  const canvas          = document.getElementById('hero-canvas');
+  const ctx             = canvas.getContext('2d');
+  const loader          = document.getElementById('loader');
+  const loaderPercent   = document.getElementById('loader-percent');
+  const progressFill    = document.getElementById('progress-fill');
   const scrollIndicator = document.getElementById('scroll-indicator');
-  const textLayers    = [
+  const scrollWrapper   = document.getElementById('scroll-wrapper');
+  const textLayers      = [
     document.getElementById('text-1'),
     document.getElementById('text-2'),
     document.getElementById('text-3'),
   ];
 
+  /* ── Timeline Refs ── */
+  const timeline          = document.getElementById('timeline');
+  const timelineProgress  = document.getElementById('timeline-progress');
+  const timelineItems     = document.querySelectorAll('.timeline__item');
+
   /* ── State ── */
-  const images        = [];
-  let currentIndex    = 0;          // lerp-smoothed float
-  let targetIndex     = 0;          // raw scroll-mapped index
-  let lastDrawnIndex  = -1;         // avoid redundant draws
-  let rafId           = null;
-  let isReady         = false;
+  const images      = [];
+  let currentIndex  = 0;
+  let targetIndex   = 0;
+  let lastDrawnIndex = -1;
+  let rafId         = null;
+  let isReady       = false;
 
   /* ════════════════════════════════════════════════
      IMAGE PRELOADER
      ════════════════════════════════════════════════ */
   function framePath(i) {
-    // ezgif-frame-001.jpg … ezgif-frame-081.jpg
     const num = String(i + 1).padStart(3, '0');
     return `${FRAME_DIR}ezgif-frame-${num}.jpg`;
   }
@@ -62,7 +67,7 @@
   }
 
   /* ════════════════════════════════════════════════
-     CANVAS SIZING  (object-fit:cover via JS)
+     CANVAS SIZING
      ════════════════════════════════════════════════ */
   function resizeCanvas() {
     const vw = window.innerWidth;
@@ -71,7 +76,6 @@
     canvas.width  = vw;
     canvas.height = vh;
 
-    // Force a redraw after resize
     lastDrawnIndex = -1;
   }
 
@@ -87,7 +91,6 @@
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
 
-    // Cover algorithm
     const scale = Math.max(cw / iw, ch / ih);
     const dw    = iw * scale;
     const dh    = ih * scale;
@@ -99,53 +102,54 @@
   }
 
   /* ════════════════════════════════════════════════
-     SCROLL  →  FRAME INDEX MAPPING
+     SCROLL → FRAME INDEX MAPPING
      ════════════════════════════════════════════════ */
-  function getScrollFraction() {
-    const scrollTop    = window.scrollY || window.pageYOffset;
-    const scrollHeight = document.body.scrollHeight - window.innerHeight;
-    if (scrollHeight <= 0) return 0;
-    return Math.min(Math.max(scrollTop / scrollHeight, 0), 1);
+  function getAnimationFraction() {
+    const wrapperTop    = scrollWrapper.offsetTop;
+    const wrapperHeight = scrollWrapper.offsetHeight;
+    const scrollY       = window.scrollY || window.pageYOffset;
+    const viewH         = window.innerHeight;
+
+    const start = wrapperTop;
+    const end   = wrapperTop + wrapperHeight - viewH;
+
+    if (end <= start) return 0;
+
+    const frac = (scrollY - start) / (end - start);
+    return Math.min(Math.max(frac, 0), 1);
   }
 
   /* ════════════════════════════════════════════════
      TEXT CHOREOGRAPHY
      ════════════════════════════════════════════════ */
   function updateTextLayers(pct) {
-    // pct is 0 – 1;  multiply by 100 for readability
     const p = pct * 100;
 
-    // ── Layer 1: "6HRS HACKATHON" ──
-    // visible 10% – 30%, fade out by 35%
     if (p >= 10 && p <= 35) {
-      const fadeIn   = smoothstep(10, 18, p);   // fade in
-      const fadeOut  = 1 - smoothstep(30, 35, p); // fade out
-      const opacity  = fadeIn * fadeOut;
-      const yShift   = (1 - fadeIn) * 40;        // translate up effect
+      const fadeIn  = smoothstep(10, 18, p);
+      const fadeOut = 1 - smoothstep(30, 35, p);
+      const opacity = fadeIn * fadeOut;
+      const yShift  = (1 - fadeIn) * 40;
       textLayers[0].style.opacity   = opacity;
       textLayers[0].style.transform = `translateY(${yShift}px)`;
     } else {
       textLayers[0].style.opacity = 0;
     }
 
-    // ── Layer 2: "BUILD FAST AND RAPID" ──
-    // visible 45% – 65%, fade out by 70%
     if (p >= 45 && p <= 70) {
-      const fadeIn   = smoothstep(45, 53, p);
-      const fadeOut  = 1 - smoothstep(65, 70, p);
-      const opacity  = fadeIn * fadeOut;
-      const scale    = 0.92 + fadeIn * 0.08;     // subtle scale-up
+      const fadeIn  = smoothstep(45, 53, p);
+      const fadeOut = 1 - smoothstep(65, 70, p);
+      const opacity = fadeIn * fadeOut;
+      const scale   = 0.92 + fadeIn * 0.08;
       textLayers[1].style.opacity   = opacity;
       textLayers[1].style.transform = `scale(${scale})`;
     } else {
       textLayers[1].style.opacity = 0;
     }
 
-    // ── Layer 3: "CROSS THE FINISH LINE" ──
-    // visible 80% – 100%
     if (p >= 80) {
-      const fadeIn  = smoothstep(80, 88, p);
-      const yShift  = (1 - fadeIn) * 30;
+      const fadeIn = smoothstep(80, 88, p);
+      const yShift = (1 - fadeIn) * 30;
       textLayers[2].style.opacity   = fadeIn;
       textLayers[2].style.transform = `translateY(${yShift}px)`;
     } else {
@@ -153,15 +157,11 @@
     }
   }
 
-  /* Hermite smoothstep helper */
   function smoothstep(edge0, edge1, x) {
     const t = Math.min(Math.max((x - edge0) / (edge1 - edge0), 0), 1);
     return t * t * (3 - 2 * t);
   }
 
-  /* ════════════════════════════════════════════════
-     SCROLL INDICATOR
-     ════════════════════════════════════════════════ */
   function updateScrollIndicator(pct) {
     if (pct > 0.03) {
       scrollIndicator.classList.add('fade-out');
@@ -171,32 +171,148 @@
   }
 
   /* ════════════════════════════════════════════════
+     TIMELINE SCROLL LOGIC
+     ════════════════════════════════════════════════ */
+  function updateTimeline() {
+    if (!timeline) return;
+
+    const rect = timeline.getBoundingClientRect();
+    const viewH = window.innerHeight;
+    
+    // Calculate progress of timeline within viewport
+    // Start drawing line when top of timeline is at 75% of viewport
+    const startPoint = viewH * 0.75;
+    // Finish drawing when bottom of timeline is at 25% of viewport
+    const endPoint = viewH * 0.25;
+
+    let progress = 0;
+
+    if (rect.top <= startPoint) {
+      const totalDist = rect.height;
+      const currentDist = startPoint - rect.top;
+      progress = Math.min(Math.max(currentDist / totalDist, 0), 1);
+    }
+
+    // Update the vertical line height
+    if(timelineProgress) {
+      timelineProgress.style.height = `${progress * 100}%`;
+    }
+
+    // Activate individual items based on the line progress
+    timelineItems.forEach((item, index) => {
+      // Calculate where this item sits relative to the total timeline height
+      const itemTop = item.offsetTop;
+      const itemProgressTarget = itemTop / rect.height;
+
+      if (progress >= itemProgressTarget) {
+        item.classList.add('is-active');
+      } else {
+        item.classList.remove('is-active');
+      }
+    });
+  }
+
+  /* ════════════════════════════════════════════════
      RAF RENDER LOOP
      ════════════════════════════════════════════════ */
   function tick() {
     if (!isReady) { rafId = requestAnimationFrame(tick); return; }
 
-    // Update target from scroll
-    const frac   = getScrollFraction();
-    targetIndex  = frac * (FRAME_COUNT - 1);
+    const frac  = getAnimationFraction();
+    targetIndex = frac * (FRAME_COUNT - 1);
 
-    // Lerp smoothing
     currentIndex += (targetIndex - currentIndex) * LERP_FACTOR;
-
     const frameIdx = Math.round(currentIndex);
 
-    // Only draw when index actually changes
     if (frameIdx !== lastDrawnIndex) {
       drawFrame(frameIdx);
       lastDrawnIndex = frameIdx;
     }
 
-    // Update overlays
     updateTextLayers(frac);
     progressFill.style.width = `${frac * 100}%`;
     updateScrollIndicator(frac);
+    
+    // Update the judging timeline
+    updateTimeline();
 
     rafId = requestAnimationFrame(tick);
+  }
+
+  /* ════════════════════════════════════════════════
+     TEXT REVEAL UTILITIES
+     ════════════════════════════════════════════════ */
+  function setupTextSplitting() {
+    const titles = document.querySelectorAll('.anim-split-words');
+    titles.forEach(title => {
+      const text = title.innerHTML;
+      // Simple split by space, keeping HTML tags intact if possible, 
+      // but here we know the structure has a <span class="accent">
+      // A more robust way for this specific markup:
+      const newHtml = text.split(/(<[^>]*>)/).map(part => {
+        if (!part || part === ' ') return ' ';
+        if (part.startsWith('<')) return part; // Keep HTML tags as is
+        
+        // Wrap actual words
+        return part.split(' ').map(word => {
+          if(!word) return '';
+          return `<span class="word">${word}</span>`;
+        }).join(' ');
+      }).join('');
+      
+      title.innerHTML = newHtml;
+    });
+  }
+
+  function initScrollReveals() {
+    setupTextSplitting();
+
+    // Intersection Observer for reveals
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          
+          // If it's a container of children we want to stagger
+          if (entry.target.classList.contains('info-cards')) {
+            const cards = entry.target.querySelectorAll('.anim-card-pop');
+            cards.forEach((card, i) => {
+              card.style.transitionDelay = `${i * 100}ms`;
+              card.classList.add('is-visible');
+            });
+          }
+          
+          if (entry.target.classList.contains('rules-list')) {
+            const rules = entry.target.querySelectorAll('.anim-rule');
+            rules.forEach((rule, i) => {
+              rule.style.transitionDelay = `${i * 80}ms`;
+              rule.classList.add('is-visible');
+            });
+          }
+
+          if (entry.target.classList.contains('timeline')) {
+             const items = entry.target.querySelectorAll('.timeline__item');
+             items.forEach((item, i) => {
+                 item.style.transitionDelay = `${i * 150}ms`;
+                 item.classList.add('is-visible');
+             })
+          }
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: "0px 0px -10% 0px"
+    });
+
+    // Observe standalone elements
+    document.querySelectorAll('.anim-slide-up, .anim-fade-up, .anim-split-words').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Observe containers for staggered children
+    document.querySelectorAll('.info-cards, .rules-list, .timeline').forEach(el => {
+      observer.observe(el);
+    });
   }
 
   /* ════════════════════════════════════════════════
@@ -215,14 +331,12 @@
     resizeCanvas();
     await preloadImages();
 
-    // Draw first frame
     drawFrame(0);
     isReady = true;
 
-    // Hide loader
     loader.classList.add('hidden');
-
-    // Start render loop
+    
+    initScrollReveals();
     tick();
   }
 

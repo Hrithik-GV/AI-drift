@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AI Drift — A cinematic scroll-driven F1 experience. Built in 6 hours." />
-  <title>AI DRIFT — Scroll Experience</title>
+  <meta name="description" content="AI Drift — A cinematic 6-hour hackathon by the AIML Department. AI & Cybersecurity FinTech Protection." />
+  <title>AI DRIFT — 6HRS Hackathon | AIML Department</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -24,38 +24,244 @@
   <!-- ══════════════ HERO VIEWPORT (fixed) ══════════════ -->
   <div class="hero-viewport" id="hero-viewport">
     <canvas id="hero-canvas"></canvas>
-
-    <!-- Overlay grain / vignette -->
     <div class="overlay-grain"></div>
     <div class="overlay-vignette"></div>
 
-    <!-- Scroll indicator -->
     <div class="scroll-indicator" id="scroll-indicator">
       <span>SCROLL TO EXPLORE</span>
       <div class="scroll-arrow"></div>
     </div>
 
-    <!-- ── TEXT LAYERS ── -->
     <div class="text-layer" id="text-1">
       <h1>6HRS<br/>HACKATHON</h1>
     </div>
-
     <div class="text-layer" id="text-2">
       <h1>BUILD FAST<br/>AND RAPID</h1>
     </div>
-
     <div class="text-layer" id="text-3">
       <h1>CROSS THE<br/>FINISH LINE</h1>
     </div>
 
-    <!-- Progress bar -->
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill"></div>
     </div>
   </div>
 
-  <!-- ══════════════ SCROLL WRAPPER (creates scroll depth) ══════════════ -->
+  <!-- ══════════════ SCROLL WRAPPER (400vh) ══════════════ -->
   <div class="scroll-wrapper" id="scroll-wrapper"></div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       CONTENT SECTIONS
+       ══════════════════════════════════════════════════════ -->
+  <main class="content-main" id="content-main">
+
+    <!-- ─────────── SECTION 1: WHAT IS AI-DRIFT ─────────── -->
+    <section class="section section--dark" id="section-about">
+      <div class="section__container">
+        <p class="section__eyebrow anim-slide-up">01 — BRIEFING</p>
+        <h2 class="section__title anim-split-words">WHAT IS <span class="accent">AI-DRIFT</span></h2>
+
+        <div class="about-grid">
+          <div class="about-description anim-fade-up">
+            <p>
+              AI-Drift is an intense, high-octane 6-hour hackathon designed to push your engineering limits to the redline.
+              Organized by the <strong>Department of Artificial Intelligence &amp; Machine Learning (AIML)</strong>,
+              this rapid prototyping marathon challenges you to architect, code, and deploy an impactful solution
+              under extreme time constraints.
+            </p>
+          </div>
+
+          <div class="info-cards">
+            <div class="info-card anim-card-pop">
+              <span class="info-card__label">VENUE</span>
+              <span class="info-card__value">29 May 2026</span>
+              <span class="info-card__sub">AIML Lab, 4th Floor, SIT Mangaluru</span>
+            </div>
+
+            <div class="info-card anim-card-pop">
+              <span class="info-card__label">TIMINGS</span>
+              <span class="info-card__value">09:30 AM – 03:30 PM</span>
+              <span class="info-card__sub">6 Hours Active Coding</span>
+            </div>
+
+            <div class="info-card anim-card-pop">
+              <span class="info-card__label">TEAM SIZE</span>
+              <span class="info-card__value">2 – 4 Members</span>
+              <span class="info-card__sub">Per Registered Team</span>
+            </div>
+
+            <div class="info-card info-card--accent anim-card-pop">
+              <span class="info-card__label">CORE FOCUS DOMAIN</span>
+              <span class="info-card__value">AI &amp; Cybersecurity</span>
+              <span class="info-card__sub">FinTech Protection</span>
+              <div class="info-card__challenge">
+                <span class="info-card__challenge-label">CHALLENGE</span>
+                <p class="info-card__challenge-text">
+                  Fraud Shield for First-Time Digital Users — Develop an AI-powered real-time fraud prevention system
+                  that protects inexperienced users while they perform digital financial activities.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ─────────── SECTION 2: RULES & REGULATIONS ─────────── -->
+    <section class="section section--charcoal" id="section-rules">
+      <div class="section__container">
+        <p class="section__eyebrow anim-slide-up">02 — PROTOCOL</p>
+        <h2 class="section__title anim-split-words">RULES &amp; <span class="accent">REGULATIONS</span></h2>
+
+        <ul class="rules-list">
+          <li class="rule-item anim-rule">
+            <span class="rule-item__num">01</span>
+            <span class="rule-item__tag">SQUAD LIMITS</span>
+            <p>2–4 members per team.</p>
+          </li>
+          <li class="rule-item anim-rule">
+            <span class="rule-item__num">02</span>
+            <span class="rule-item__tag">TIMELINE DISCIPLINE</span>
+            <p>Build must happen entirely within the official hackathon duration.</p>
+          </li>
+          <li class="rule-item anim-rule">
+            <span class="rule-item__num">03</span>
+            <span class="rule-item__tag">STACK FREEDOM</span>
+            <p>Complete freedom to use any programming language, framework, or technology stack.</p>
+          </li>
+          <li class="rule-item anim-rule">
+            <span class="rule-item__num">04</span>
+            <span class="rule-item__tag">CODE ETHICS</span>
+            <p>Pre-built templates/UI kits are allowed to optimize time, but all core application logic must be developed live. Copying existing GitHub repositories or submitting historical codebases is strictly banned.</p>
+          </li>
+          <li class="rule-item anim-rule">
+            <span class="rule-item__num">05</span>
+            <span class="rule-item__tag">VERSION CONTROL</span>
+            <p>Teams must maintain a public GitHub repository with a clear README file detailing the tech stack and configuration instructions, submitting the link at 03:30 PM sharp.</p>
+          </li>
+          <li class="rule-item anim-rule">
+            <span class="rule-item__num">06</span>
+            <span class="rule-item__tag">PROJECT SAFEGUARDS</span>
+            <p>Applications must strictly focus on protection, risk analysis, and user awareness — no offensive exploits or harmful cybersecurity activities allowed. Use demo or simulated transactions for validation testing.</p>
+          </li>
+          <li class="rule-item anim-rule">
+            <span class="rule-item__num">07</span>
+            <span class="rule-item__tag">DELIVERABLES</span>
+            <p>A functional MVP or working prototype must be demonstrated live during judging evaluations.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+
+    <!-- ─────────── SECTION 3: JUDGING — SCROLL TIMELINE ─────────── -->
+    <section class="section section--dark" id="section-judging">
+      <div class="section__container">
+        <p class="section__eyebrow anim-slide-up">03 — PODIUM</p>
+        <h2 class="section__title anim-split-words">THE PODIUM <span class="accent">EVALUATION</span></h2>
+
+        <div class="timeline" id="timeline">
+          <!-- Vertical progress line -->
+          <div class="timeline__track">
+            <div class="timeline__progress" id="timeline-progress"></div>
+          </div>
+
+          <div class="timeline__item" data-tl-index="0">
+            <div class="timeline__dot"></div>
+            <div class="judge-card">
+              <span class="judge-card__score">20</span>
+              <h3 class="judge-card__title">Innovation &amp; Creativity</h3>
+              <p class="judge-card__desc">Originality and distinct uniqueness of the solution approach.</p>
+            </div>
+          </div>
+
+          <div class="timeline__item" data-tl-index="1">
+            <div class="timeline__dot"></div>
+            <div class="judge-card">
+              <span class="judge-card__score">20</span>
+              <h3 class="judge-card__title">AI Integration</h3>
+              <p class="judge-card__desc">Smart deployment of AI/ML models for real-time threat detection and behavioral analysis.</p>
+            </div>
+          </div>
+
+          <div class="timeline__item" data-tl-index="2">
+            <div class="timeline__dot"></div>
+            <div class="judge-card">
+              <span class="judge-card__score">15</span>
+              <h3 class="judge-card__title">Problem Understanding</h3>
+              <p class="judge-card__desc">Deep grasp of fraud variations, cybersecurity vulnerabilities, and user risks.</p>
+            </div>
+          </div>
+
+          <div class="timeline__item" data-tl-index="3">
+            <div class="timeline__dot"></div>
+            <div class="judge-card">
+              <span class="judge-card__score">15</span>
+              <h3 class="judge-card__title">Technical Implementation</h3>
+              <p class="judge-card__desc">Engineering execution, architecture integration, and operational functionality.</p>
+            </div>
+          </div>
+
+          <div class="timeline__item" data-tl-index="4">
+            <div class="timeline__dot"></div>
+            <div class="judge-card">
+              <span class="judge-card__score">10</span>
+              <h3 class="judge-card__title">User Experience (UI/UX)</h3>
+              <p class="judge-card__desc">Simplicity, ease of use, and practical accessibility for first-time digital profiles.</p>
+            </div>
+          </div>
+
+          <div class="timeline__item" data-tl-index="5">
+            <div class="timeline__dot"></div>
+            <div class="judge-card">
+              <span class="judge-card__score">10</span>
+              <h3 class="judge-card__title">Real-Time Functionality</h3>
+              <p class="judge-card__desc">Efficiency of live monitoring parameters and immediate alert dispatching systems.</p>
+            </div>
+          </div>
+
+          <div class="timeline__item" data-tl-index="6">
+            <div class="timeline__dot"></div>
+            <div class="judge-card">
+              <span class="judge-card__score">5</span>
+              <h3 class="judge-card__title">Presentation &amp; Demo</h3>
+              <p class="judge-card__desc">Fluidity of the team's conceptual breakdown and live simulation.</p>
+            </div>
+          </div>
+
+          <div class="timeline__item" data-tl-index="7">
+            <div class="timeline__dot"></div>
+            <div class="judge-card">
+              <span class="judge-card__score">5</span>
+              <h3 class="judge-card__title">Social Impact &amp; Feasibility</h3>
+              <p class="judge-card__desc">Real-world scalability, practical usefulness, and execution logic.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="judging-total anim-fade-up">
+          <span class="judging-total__label">TOTAL MARKS</span>
+          <span class="judging-total__value">100</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ─────────── SECTION 4: FINAL CTA ─────────── -->
+    <section class="section section--cta" id="section-cta">
+      <div class="section__container section__container--center">
+        <h2 class="cta-title anim-fade-up">JOIN <span class="accent">AI-DRIFT</span></h2>
+        <p class="cta-subtitle anim-fade-up">6 Hours. Absolute Precision. No Room for Errors.</p>
+        <a href="#register" class="btn-cta anim-fade-up" id="btn-register">SECURE YOUR PLACE ON THE GRID</a>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>AI-DRIFT 2026 &mdash; Department of AI &amp; ML, SIT Mangaluru</p>
+    </footer>
+  </main>
 
   <script src="script.js"></script>
 </body>

@@ -3,14 +3,17 @@
    ════════════════════════════════════════════════ */
 
 /* ── Reset ── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: auto;          /* we handle smoothing ourselves */
+  scroll-behavior: auto;
+  /* Handled by JS for smooth scrolling or native if preferred, but auto is better for custom scroll sync */
 }
 
 body {
@@ -60,7 +63,9 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loader-text {
@@ -101,7 +106,6 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* sized via JS to achieve object-fit:cover */
 }
 
 /* ── Grain overlay ── */
@@ -163,8 +167,15 @@ body {
 }
 
 @keyframes bounce {
-  0%, 100% { transform: rotate(45deg) translateY(0); }
-  50%      { transform: rotate(45deg) translateY(8px); }
+
+  0%,
+  100% {
+    transform: rotate(45deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(45deg) translateY(8px);
+  }
 }
 
 /* ════════════════════════════════════════════════
@@ -184,7 +195,7 @@ body {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, #ff3c3c, #ff8c3c);
-  transition: none;   /* driven by JS */
+  transition: none;
 }
 
 /* ════════════════════════════════════════════════
@@ -209,18 +220,14 @@ body {
   line-height: 1.05;
   letter-spacing: 0.03em;
   color: #ffffff;
+  font-size: clamp(2.4rem, 8vw, 7rem);
   text-shadow:
     0 0 60px rgba(255, 60, 60, 0.25),
     0 0 120px rgba(255, 60, 60, 0.1);
 }
 
-/* Responsive type sizing */
-.text-layer h1 {
-  font-size: clamp(2.4rem, 8vw, 7rem);
-}
-
 /* ════════════════════════════════════════════════
-   SCROLL WRAPPER  (provides 400vh scroll depth)
+   SCROLL WRAPPER
    ════════════════════════════════════════════════ */
 .scroll-wrapper {
   position: relative;
@@ -231,20 +238,632 @@ body {
 }
 
 /* ════════════════════════════════════════════════
-   SELECTION & SCROLLBAR
+   CONTENT MAIN
    ════════════════════════════════════════════════ */
-::selection {
-  background: #ff3c3c;
+.content-main {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ════════════════════════════════════════════════
+   SHARED SECTION UTILITIES
+   ════════════════════════════════════════════════ */
+.section {
+  padding: 140px 24px;
+  position: relative;
+}
+
+.section--dark {
+  background: #0a0a0a;
+}
+
+.section--charcoal {
+  background: #121212;
+}
+
+.section--cta {
+  background: #0a0a0a;
+  padding: 160px 24px;
+}
+
+.section__container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.section__container--center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section__eyebrow {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.section__title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  margin-bottom: 80px;
+  overflow: hidden;
+  /* For split text anim */
+}
+
+.accent {
+  background: linear-gradient(135deg, #ff3c3c, #ff8c3c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block; /* Ensure the span wraps properly for the text clip */
+}
+
+/* Ensure that when words inside .accent are split, they also get the gradient */
+.accent .word {
+  background: linear-gradient(135deg, #ff3c3c, #ff8c3c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 1: WHAT IS AI-DRIFT
+   ════════════════════════════════════════════════ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.about-description p {
+  font-size: 1.15rem;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+.about-description strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+.info-card:hover {
+  border-color: rgba(255, 60, 60, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-4px);
+}
+
+.info-card--accent {
+  grid-column: 1 / -1;
+  border-color: rgba(255, 60, 60, 0.15);
+  background: rgba(255, 60, 60, 0.04);
+}
+
+.info-card__label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.info-card__value {
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #ffffff;
 }
 
-::-webkit-scrollbar {
-  width: 4px;
+.info-card__sub {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
 }
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
+
+.info-card__challenge {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255, 60, 60, 0.3);
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 60, 60, 0.3);
+
+.info-card__challenge-label {
+  display: inline-block;
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ff3c3c;
+  background: rgba(255, 60, 60, 0.1);
+  padding: 4px 8px;
   border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.info-card__challenge-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 2: RULES & REGULATIONS
+   ════════════════════════════════════════════════ */
+.rules-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rule-item {
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  transition: background 0.3s ease;
+}
+
+.rule-item:hover {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.rule-item:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rule-item__num {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.15);
+  font-family: monospace;
+}
+
+.rule-item__tag {
+  flex-shrink: 0;
+  width: 180px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ff3c3c;
+  padding-top: 4px;
+  /* Align with text */
+}
+
+.rule-item p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 400;
+  flex-grow: 1;
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 3: JUDGING (TIMELINE)
+   ════════════════════════════════════════════════ */
+.timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+.timeline__track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(-50%);
+}
+
+.timeline__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(180deg, #ff3c3c, #ff8c3c);
+  height: 0%;
+  /* Driven by JS */
+  box-shadow: 0 0 15px rgba(255, 60, 60, 0.5);
+}
+
+.timeline__item {
+  position: relative;
+  margin-bottom: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.timeline__item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timeline__item:nth-child(even) {
+  justify-content: flex-start;
+}
+
+.timeline__item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #121212;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  z-index: 2;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, background 0.4s ease;
+}
+
+.timeline__item.is-active .timeline__dot {
+  transform: translate(-50%, -50%) scale(1);
+  border-color: #ff3c3c;
+  background: #ff3c3c;
+  box-shadow: 0 0 20px rgba(255, 60, 60, 0.6);
+}
+
+.timeline__item .judge-card {
+  width: calc(50% - 40px);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 32px;
+  position: relative;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline__item.is-active .judge-card {
+  border-color: rgba(255, 60, 60, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Arrow indicator on the card */
+.timeline__item .judge-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 10px;
+  border-style: solid;
+}
+
+.timeline__item:nth-child(odd) .judge-card::before {
+  left: -20px;
+  border-color: transparent rgba(255, 255, 255, 0.05) transparent transparent;
+}
+
+.timeline__item.is-active:nth-child(odd) .judge-card::before {
+  border-color: transparent rgba(255, 60, 60, 0.3) transparent transparent;
+}
+
+.timeline__item:nth-child(even) .judge-card::before {
+  right: -20px;
+  border-color: transparent transparent transparent rgba(255, 255, 255, 0.05);
+}
+
+.timeline__item.is-active:nth-child(even) .judge-card::before {
+  border-color: transparent transparent transparent rgba(255, 60, 60, 0.3);
+}
+
+.judge-card__score {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, #ff3c3c, #ff8c3c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.judge-card__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.judge-card__desc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+.judging-total {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.judging-total__label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.judging-total__value {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, #ff3c3c, #ff8c3c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ════════════════════════════════════════════════
+   SECTION 4: FINAL CTA
+   ════════════════════════════════════════════════ */
+.cta-title {
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-bottom: 24px;
+}
+
+.cta-subtitle {
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 56px;
+}
+
+.btn-cta {
+  display: inline-block;
+  padding: 20px 48px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff3c3c, #ff8c3c);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.btn-cta:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 12px 48px rgba(255, 60, 60, 0.35),
+    0 4px 16px rgba(255, 140, 60, 0.2);
+}
+
+.btn-cta:hover::before {
+  opacity: 1;
+}
+
+.btn-cta:active {
+  transform: translateY(0) scale(1);
+}
+
+/* ════════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════════ */
+.site-footer {
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.site-footer p {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* ════════════════════════════════════════════════
+   ANIMATION CLASSES
+   ════════════════════════════════════════════════ */
+
+/* Simple Slide Up */
+.anim-slide-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim-slide-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade Up General */
+.anim-fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.anim-fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Split Words Container (JS wraps words in spans) */
+.anim-split-words .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim-split-words.is-visible .word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Info Cards Stagger */
+.anim-card-pop {
+  opacity: 0;
+  transform: scale(0.95) translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.anim-card-pop.is-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* Rules List Stagger */
+.anim-rule {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.anim-rule.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Delay modifiers added by JS */
+
+/* ════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .timeline__track {
+    left: 24px;
+  }
+
+  .timeline__item {
+    justify-content: flex-end !important;
+    /* Force all cards right */
+    padding-left: 64px;
+    width: 100%;
+  }
+
+  .timeline__dot {
+    left: 24px;
+    transform: translate(-50%, -50%) scale(0) !important;
+  }
+
+  .timeline__item.is-active .timeline__dot {
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  .timeline__item .judge-card {
+    width: 100%;
+  }
+
+  /* Adjust arrow for all cards to point left */
+  .timeline__item .judge-card::before {
+    left: -20px !important;
+    border-color: transparent rgba(255, 255, 255, 0.05) transparent transparent !important;
+  }
+
+  .timeline__item.is-active .judge-card::before {
+    border-color: transparent rgba(255, 60, 60, 0.3) transparent transparent !important;
+  }
+
+  .rule-item {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .rule-item__tag {
+    width: calc(100% - 48px);
+    /* Account for num width */
+  }
+
+  .rule-item p {
+    width: 100%;
+    padding-left: 48px;
+  }
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding: 80px 16px;
+  }
+
+  .section--cta {
+    padding: 100px 16px;
+  }
+
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-cta {
+    padding: 16px 32px;
+    font-size: 0.7rem;
+  }
 }
