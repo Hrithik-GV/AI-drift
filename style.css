@@ -306,7 +306,8 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  display: inline-block; /* Ensure the span wraps properly for the text clip */
+  display: inline-block;
+  /* Ensure the span wraps properly for the text clip */
 }
 
 /* Ensure that when words inside .accent are split, they also get the gradient */
