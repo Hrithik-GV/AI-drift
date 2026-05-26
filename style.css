@@ -154,14 +154,24 @@ body {
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.4em;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255);
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.scroll-text {
+
+  color: rgba(255, 255, 255);
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .scroll-arrow {
   width: 20px;
   height: 20px;
-  border-right: 2px solid rgba(255, 255, 255, 0.3);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  border-right: 3.5px solid rgba(255, 255, 255);
+  border-bottom: 3.5px solid rgba(255, 255, 255);
+
   transform: rotate(45deg);
   animation: bounce 2s ease-in-out infinite;
 }
@@ -852,7 +862,8 @@ body {
 
 @media (max-width: 560px) {
   .scroll-wrapper {
-    height: 800vh; /* Increase scroll distance to counteract mobile inertia scrolling */
+    height: 800vh;
+    /* Increase scroll distance to counteract mobile inertia scrolling */
   }
 
   .section {
