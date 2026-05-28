@@ -15,7 +15,21 @@
 </head>
 
 <body>
-
+  <!-- ══════════════ NOTIFICATION BAR ══════════════ -->
+  <div class="top-notification">
+    <div class="marquee-container">
+      <div class="marquee-content">
+        <span>ATTENDANCE FOR THE FULL DAY WILL BE PROVIDED</span>
+        <span class="separator">•</span>
+        <span>ATTENDANCE FOR THE FULL DAY WILL BE PROVIDED</span>
+        <span class="separator">•</span>
+        <span>ATTENDANCE FOR THE FULL DAY WILL BE PROVIDED</span>
+        <span class="separator">•</span>
+        <span>ATTENDANCE FOR THE FULL DAY WILL BE PROVIDED</span>
+        <span class="separator">•</span>
+      </div>
+    </div>
+  </div>
   <!-- ══════════════ LOADING SCREEN ══════════════ -->
   <div id="loader" class="loader">
     <div class="loader-inner">
@@ -46,7 +60,10 @@
       <h1>CROSS THE<br />FINISH LINE</h1>
     </div>
 
-    <div class="progress-track">
+    <div class="progress-track" id="progress-track">
+      <div class="progress-marker" style="top: 0%;"></div>
+      <div class="progress-marker" style="top: 50%;"></div>
+      <div class="progress-marker" style="top: 100%;"></div>
       <div class="progress-fill" id="progress-fill"></div>
     </div>
   </div>

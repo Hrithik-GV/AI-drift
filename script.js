@@ -16,6 +16,7 @@
   const loader = document.getElementById('loader');
   const loaderPercent = document.getElementById('loader-percent');
   const progressFill = document.getElementById('progress-fill');
+  const progressMarkers = document.querySelectorAll('.progress-marker');
   const scrollIndicator = document.getElementById('scroll-indicator');
   const scrollWrapper = document.getElementById('scroll-wrapper');
   const textLayers = [
@@ -230,7 +231,17 @@
     }
 
     updateTextLayers(frac);
-    progressFill.style.width = `${frac * 100}%`;
+    
+    // Update vertical timeline height
+    progressFill.style.height = `${frac * 100}%`;
+    
+    // Light up timeline markers (Start, Mid, End)
+    if (progressMarkers.length >= 3) {
+      progressMarkers[0].classList.toggle('is-active', frac > 0.05);
+      progressMarkers[1].classList.toggle('is-active', frac > 0.45);
+      progressMarkers[2].classList.toggle('is-active', frac > 0.95);
+    }
+
     updateScrollIndicator(frac);
 
     // Update the judging timeline
